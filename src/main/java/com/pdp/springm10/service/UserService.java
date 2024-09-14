@@ -5,7 +5,6 @@ import com.pdp.springm10.dto.UserDTO;
 import com.pdp.springm10.entity.User;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Aliabbos Ashurov
@@ -17,15 +16,13 @@ public interface UserService {
 
     boolean existsByUsername(String username);
 
-    boolean existsByEmail(String email);
-
-    User saveUser(User user);
+    User save(UserDTO dto);
 
     void saveUsers(List<UserDTO> users);
 
     List<UserDTO> findAll();
 
-    User findById(Long id);
+    UserDTO findById(Long id);
 
     void deleteById(Long id);
 

@@ -4,9 +4,7 @@ import com.pdp.springm10.dto.UpdateUserDTO;
 import com.pdp.springm10.dto.UserDTO;
 import com.pdp.springm10.entity.User;
 import com.pdp.springm10.handler.exception.UserNotFoundException;
-import com.pdp.springm10.mapper.UserMapper;
 import com.pdp.springm10.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +22,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
 
     @Override
     public User findByUsername(String username) {
@@ -37,18 +34,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    @Override
-    public User saveUser(User user) {
+    public User save(UserDTO dto) {
+        User user = User.builder()
+                .fullname(dto.fullname())
+                .username(dto.username())
+                .password(passwordEncoder.encode(dto.password()))
+                .build();
         return userRepository.save(user);
     }
 
     @Override
-    public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+    public UserDTO findById(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        return new UserDTO(user.getFullname(), user.getUsername(), user.getPassword());
     }
 
     @Override
@@ -59,8 +57,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUsers(List<UserDTO> dtoList) {
         dtoList.forEach(dto -> {
-            User user = userMapper.toUser(dto);
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            User user = User.builder()
+                    .fullname(dto.fullname())
+                    .username(dto.username())
+                    .password(passwordEncoder.encode(dto.password()))
+                    .build();
             userRepository.save(user);
         });
     }
@@ -78,7 +79,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> findAll() {
         return userRepository.findAll().stream()
-                .map(userMapper::toUserDTO)
+                .map(user -> {
+                    return new UserDTO(user.getFullname(), user.getUsername(), user.getPassword());
+                })
                 .collect(Collectors.toList());
     }
 }

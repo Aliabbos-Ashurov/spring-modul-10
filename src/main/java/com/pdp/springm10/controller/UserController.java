@@ -6,6 +6,7 @@ import com.pdp.springm10.entity.User;
 import com.pdp.springm10.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,16 +22,18 @@ public class UserController {
 
     private final UserService userService;
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/all")
     public ResponseEntity<List<UserDTO>> getUsers() {
         return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<UserDTO> findById(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(userService.findById(id));
     }
 
+    @PostMapping("/add/users")
     public ResponseEntity<Void> saveAllUsers(@RequestBody List<UserDTO> dtos) {
         userService.saveUsers(dtos);
         return ResponseEntity.noContent().build();
