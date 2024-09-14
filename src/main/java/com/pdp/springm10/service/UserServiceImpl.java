@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
     @Cacheable(value = "users", key = "#id")
     public UserDTO findById(Long id) {
         User user = userRepository.findById(id).orElse(null);
+        assert user != null;
         return new UserDTO(user.getFullname(), user.getUsername(), user.getPassword());
     }
 

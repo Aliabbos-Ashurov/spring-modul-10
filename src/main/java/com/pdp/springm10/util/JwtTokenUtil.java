@@ -17,6 +17,7 @@ import java.util.Date;
  * @since 14/September/2024  14:10
  **/
 @Component
+@SuppressWarnings("deprecation")
 public class JwtTokenUtil {
 
     private static final String SECRET_KEY = "nSeekdNjjy5XETrhlZwTNdLtzw+gn6JnDhIhUCCXm54=";

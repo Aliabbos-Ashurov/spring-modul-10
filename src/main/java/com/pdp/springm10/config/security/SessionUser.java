@@ -13,6 +13,7 @@ import java.util.Objects;
  * @since 14/September/2024  13:36
  **/
 @Component
+@SuppressWarnings("unused")
 public class SessionUser {
 
     public CustomUserDetails user() {

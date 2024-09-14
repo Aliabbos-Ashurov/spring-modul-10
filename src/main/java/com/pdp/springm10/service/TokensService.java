@@ -19,9 +19,9 @@ public class TokensService {
     private final TokensRepository tokensRepository;
 
     @Transactional
-    public Tokens saveTokens(String username, String accessToken, String refreshToken) {
+    public void saveTokens(String username, String accessToken, String refreshToken) {
         Tokens tokens = new Tokens(null, accessToken, refreshToken, username);
-        return tokensRepository.save(tokens);
+        tokensRepository.save(tokens);
     }
 
     public Tokens findByUsername(String username) {

@@ -10,6 +10,7 @@ import java.util.List;
  * @author Aliabbos Ashurov
  * @since 14/September/2024  11:55
  **/
+@SuppressWarnings("unused")
 public interface UserService {
 
     User findByUsername(String username);
