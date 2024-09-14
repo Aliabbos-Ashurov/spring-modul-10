@@ -20,36 +20,33 @@ import java.util.Date;
 public class JwtTokenUtil {
 
     private static final String SECRET_KEY = "nSeekdNjjy5XETrhlZwTNdLtzw+gn6JnDhIhUCCXm54=";
+    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24;
+    private static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 7;
 
-    public static boolean isValid(String token) {
-        try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(getSignKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-            return claims.getExpiration().after(new Date());
-        } catch (SecurityException e) {
-            return false;
-        }
-    }
-
-    public static String getUsername(String token) {
-        Claims claims = Jwts.parser().setSigningKey(getSignKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
-    }
-
-    public String generateToken(@NonNull String username) {
+    public String generateAccessToken(@NonNull String username) {
         return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .subject(username)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
 
+    public String generateRefreshToken(@NonNull String username) {
+        return Jwts.builder()
+                .subject(username)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public Boolean isValid(String token) {
+        try {
+            return !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
@@ -71,5 +68,14 @@ public class JwtTokenUtil {
 
     private static Key getSignKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
+    }
+
+    public static String getUsername(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getSubject();
     }
 }
