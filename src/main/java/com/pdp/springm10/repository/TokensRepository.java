@@ -1,6 +1,5 @@
 package com.pdp.springm10.repository;
 
-import com.pdp.springm10.dto.TokenRequestDTO;
 import com.pdp.springm10.entity.Tokens;
 import org.springframework.data.jpa.repository.JpaRepository;
 

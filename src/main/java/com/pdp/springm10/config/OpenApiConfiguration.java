@@ -9,6 +9,7 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import io.swagger.v3.oas.models.tags.Tag;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -49,7 +50,11 @@ public class OpenApiConfiguration {
                                 .scheme("bearer")
                                 .bearerFormat("JWT"))
                 )
-                .security(List.of(new SecurityRequirement().addList("bearerAuth")));
+                .security(List.of(new SecurityRequirement().addList("bearerAuth")))
+                .tags(List.of(
+                        new Tag().name("Authentication").description("Operations related to authentication"),
+                        new Tag().name("User Management").description("Operations related to managing users")
+                ));
     }
 }
 

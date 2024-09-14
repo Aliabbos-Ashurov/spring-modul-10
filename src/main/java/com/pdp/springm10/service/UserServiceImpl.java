@@ -6,6 +6,7 @@ import com.pdp.springm10.entity.User;
 import com.pdp.springm10.handler.exception.UserNotFoundException;
 import com.pdp.springm10.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "#id")
     public UserDTO findById(Long id) {
         User user = userRepository.findById(id).orElse(null);
         return new UserDTO(user.getFullname(), user.getUsername(), user.getPassword());
@@ -77,6 +79,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "#root.methodName")
     public List<UserDTO> findAll() {
         return userRepository.findAll().stream()
                 .map(user -> {
