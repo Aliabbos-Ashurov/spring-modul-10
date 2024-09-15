@@ -13,8 +13,12 @@ spring:
         auth: true
         starttls:
           enable: true
-  liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
+  shell:
+    interactive:
+      enabled: true
+logging:
+  level:
+    root: error
 ---
 spring:
   config:
@@ -28,10 +32,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
-        show_sql: true
   task:
     execution:
       pool:
@@ -41,26 +41,3 @@ spring:
         queue-capacity: 500
       thread-name-prefix: prod-
 ---
-spring:
-  config:
-    activate:
-      on-profile: test
-  task:
-    execution:
-      pool:
-        core-size: 5
-        max-size: 10
-        keep-alive: 10s
-        queue-capacity: 30
-      thread-name-prefix: test-
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: ""
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-server:
-  port: 9090
