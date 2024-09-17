@@ -1,0 +1,77 @@
+type Query {
+    getUserById(id: Int!): User
+    allUsers: [User]
+    todosByLevel(level: Level!): [Todo]
+    todosByCategory(category: Category!): [Todo]
+    todosByDeadLine(deadLine: String!): [Todo]
+    todosByUser(userId: Int!): [Todo]
+}
+
+type Mutation {
+    createUser(input: UserCreateInput!): User
+    updateUser(id: Int!, input: UserUpdateInput!): User
+    deleteUser(id: Int!): Boolean
+    createTodo(input: TodoCreateInput!): Todo
+    updateTodo(id: Int!, input: TodoUpdateInput!): Todo
+    deleteTodo(id: Int!): Boolean
+    completeTodo(id: Int!): Todo
+}
+
+type User {
+    id: Int
+    fullName: String
+    email: String
+    todos: [Todo]
+}
+
+input UserCreateInput {
+    fullName: String!
+    email: String!
+    password: String!
+}
+
+input UserUpdateInput {
+    fullName: String
+    email: String
+    password: String
+}
+
+type Todo {
+    id: Int
+    title: String
+    description: String
+    category: Category
+    level: Level
+    deadLine: String
+    completed: Boolean
+}
+
+input TodoCreateInput {
+    title: String!
+    description: String
+    category: Category
+    level: Level
+    deadLine: String
+    userId: Int!
+}
+
+input TodoUpdateInput {
+    title: String
+    description: String
+    category: Category
+    level: Level
+    deadLine: String
+    completed: Boolean
+}
+
+enum Category {
+    ENTERTAINMENT
+    STUDY
+    WORK
+}
+
+enum Level {
+    LOW
+    MEDIUM
+    HIGH
+}
